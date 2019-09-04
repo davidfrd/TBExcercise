@@ -40,7 +40,7 @@ public class DateUtils {
 		return Minutes.minutes(splitedHour.get(0) * MINUTES_IN_HOUR + splitedHour.get(1)).toStandardSeconds();
 	}
 	
-	public static Integer secondsToHours(Integer seconds) {
-		return seconds / SECONDS_IN_HOUR;
+	public static Double secondsToHours(Integer seconds) {
+		return Double.valueOf(seconds) / SECONDS_IN_HOUR;
 	}
 }

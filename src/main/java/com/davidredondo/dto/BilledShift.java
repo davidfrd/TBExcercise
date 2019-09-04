@@ -3,6 +3,9 @@ package com.davidredondo.dto;
 import java.io.Serializable;
 import java.util.List;
 
+import com.davidredondo.util.DoubleDecimalSerializerWithTwoDigitPrecisionAndDotSeparator;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
 public class BilledShift implements Serializable {
 	
 	private static final long serialVersionUID = -9036942206048040725L;
@@ -15,18 +18,19 @@ public class BilledShift implements Serializable {
 	
 	private Integer session;
 	
+	@JsonSerialize(using = DoubleDecimalSerializerWithTwoDigitPrecisionAndDotSeparator.class)
 	private Double pay;
 	
 	private List<BillingPortion> portions;
 	
 	public static BilledShift from(BillingShift billingShift, List<BillingPortion> billingPortionList) {
 		BilledShift billedShift = new BilledShift();
-		billedShift.id = billingShift.getId();
-		billedShift.start = billingShift.getStart();
-		billedShift.end = billingShift.getEnd();
-		billedShift.portions = billingPortionList;
-		billedShift.pay = billingPortionList.stream().map(BillingPortion::getPay).reduce(0d, Double::sum);
-		billedShift.session = billingShift.getSessionInSeconds();
+		billedShift.setId(billingShift.getId());
+		billedShift.setStart(billingShift.getStart());
+		billedShift.setEnd(billingShift.getEnd());
+		billedShift.setPortions(billingPortionList);
+		billedShift.setPay(billingPortionList.stream().map(BillingPortion::getPay).reduce(0d, Double::sum));
+		billedShift.setSession(billingShift.getSessionInSeconds());
 		return billedShift;
 	}
 

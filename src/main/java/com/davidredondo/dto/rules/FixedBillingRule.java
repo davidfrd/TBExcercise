@@ -3,7 +3,6 @@ package com.davidredondo.dto.rules;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
-import org.joda.time.DateTime;
 import org.joda.time.Seconds;
 
 import com.davidredondo.dto.BillingPortion;
@@ -49,7 +48,6 @@ public class FixedBillingRule extends BillingRule {
 
 	public BillingPortion calculateBillingPortionFromShift(BillingShift billingShift) {
 		Seconds billingStartSeconds = Seconds.seconds(billingShift.getStartDateTime().getSecondOfDay());
-		Seconds billingSessionTime = billingShift.getSessionTime();
 		
 		Seconds secondsBetweenRuleStartAndEnd = getSecondsBetweenStartAndEnd();
 		
@@ -57,6 +55,10 @@ public class FixedBillingRule extends BillingRule {
 		// Se convierte en un duration
 		//Seconds start = Seconds.ZERO;
 		Seconds start = startSeconds.minus(billingStartSeconds);
+		if (start.isLessThan(Seconds.ZERO)) {
+			secondsBetweenRuleStartAndEnd = secondsBetweenRuleStartAndEnd.plus(start);
+			start = Seconds.ZERO;
+		}
 		Seconds end = start.plus(secondsBetweenRuleStartAndEnd);
 		/* BORRAR */
 		BillingPortion billingPortion = new BillingPortion(); 
@@ -74,7 +76,7 @@ public class FixedBillingRule extends BillingRule {
 	private Integer calculatePortionSessionDuration(Integer shiftDuration, Integer start, Integer end) {
 		if (start > shiftDuration) {
 			return 0;
-		} else if( end > shiftDuration) {
+		} else if( end > shiftDuration ) {
 			return shiftDuration - start;
 		} else if (end < shiftDuration ) {
 			return end - start;

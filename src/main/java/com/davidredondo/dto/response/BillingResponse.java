@@ -4,11 +4,14 @@ import java.io.Serializable;
 import java.util.List;
 
 import com.davidredondo.dto.BilledShift;
+import com.davidredondo.util.DoubleDecimalSerializerWithTwoDigitPrecisionAndDotSeparator;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 public class BillingResponse implements Serializable {
 	
 	private static final long serialVersionUID = 5997136200516270281L;
 
+	@JsonSerialize(using = DoubleDecimalSerializerWithTwoDigitPrecisionAndDotSeparator.class)
 	private Double pay;
 	
 	private List<BilledShift> billedShifts;

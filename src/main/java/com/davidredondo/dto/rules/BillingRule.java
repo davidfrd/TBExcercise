@@ -8,9 +8,11 @@ import javax.validation.constraints.Positive;
 
 import com.davidredondo.dto.BillingPortion;
 import com.davidredondo.dto.BillingShift;
+import com.davidredondo.util.DoubleDecimalSerializerWithTwoDigitPrecisionAndDotSeparator;
 import com.davidredondo.util.interfaces.Validable;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type", visible = true)
 @JsonSubTypes({
@@ -31,6 +33,7 @@ public abstract class BillingRule implements Validable, Serializable {
 	
 	@NotNull
 	@Positive
+	@JsonSerialize(using = DoubleDecimalSerializerWithTwoDigitPrecisionAndDotSeparator.class)
 	private Double payRate;
 
 	

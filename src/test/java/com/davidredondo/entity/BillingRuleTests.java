@@ -25,10 +25,10 @@ public class BillingRuleTests {
 
 	@Before
 	public void initialize() {
-		shift = createBillingShift(1, "2019-04-28 08:00:00", "2019-04-28 17:00:00");
-		fixedRule = createFixedBillingRule(1, "15:00", "18:00", 10.5);
-		durationRule = createFixedBillingRule(1, 25200, 36000, 10.5);
-		billingPortion = createBillingPortion(1, "2019-04-28 15:00:00", "2019-04-28 17:00:00", 7200, 21d);
+		shift = EntityMaker.createBillingShift(1, "2019-04-28 08:00:00", "2019-04-28 17:00:00");
+		fixedRule = EntityMaker.createFixedBillingRule(1, "15:00", "18:00", 10.5);
+		durationRule = EntityMaker.createDurationBillingRule(1, 25200, 36000, 10.5);
+		billingPortion = EntityMaker.createBillingPortion(1, "2019-04-28 15:00:00", "2019-04-28 17:00:00", 7200, 21d);
 	}
 
 	@Test
@@ -49,46 +49,8 @@ public class BillingRuleTests {
 
 	@Test(expected = ValidationException.class)
 	public void testDurationRuleValidation() {
-		DurationBillingRule badDurationRule = createFixedBillingRule(1, 25200, 0, 10.50);
+		DurationBillingRule badDurationRule = EntityMaker.createDurationBillingRule(1, 25200, 0, 10.50);
 		badDurationRule.validate();
-	}
-	
-	private BillingPortion createBillingPortion(Integer id, String start, String end, Integer session, Double pay) {
-		BillingPortion billingPortion = new BillingPortion();
-		billingPortion.setId(id);
-		billingPortion.setStart(start);
-		billingPortion.setEnd(end);
-		billingPortion.setSession(session);
-		billingPortion.setPay(pay);
-		return billingPortion;
-	}
-
-	private FixedBillingRule createFixedBillingRule(Integer id, String start, String end, Double payRate) {
-		FixedBillingRule billingRule = new FixedBillingRule();
-		billingRule.setId(id);
-		billingRule.setType("FIXED");
-		billingRule.setStart(start);
-		billingRule.setEnd(end);
-		billingRule.setPayRate(payRate);
-		return billingRule;
-	}
-
-	private DurationBillingRule createFixedBillingRule(Integer id, Integer start, Integer end, Double payRate) {
-		DurationBillingRule billingRule = new DurationBillingRule();
-		billingRule.setId(id);
-		billingRule.setType("DURATION");
-		billingRule.setStart(start);
-		billingRule.setEnd(end);
-		billingRule.setPayRate(payRate);
-		return billingRule;
-	}
-
-	private BillingShift createBillingShift(Integer id, String start, String end) {
-		BillingShift billingShift = new BillingShift();
-		billingShift.setId(id);
-		billingShift.setStart(start);
-		billingShift.setEnd(end);
-		return billingShift;
 	}
 
 }

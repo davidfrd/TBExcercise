@@ -15,11 +15,10 @@ import com.davidredondo.service.interfaces.IBillingService;
 @RestController
 @RequestMapping("/billing")
 public class BillingController {
-	
+
 	@Autowired
 	IBillingService billingService;
 
-	
 	@PostMapping
 	public BillingResponse calculateBilling(@Valid @RequestBody BillingRequest billingRequest) {
 		return billingService.calculateBilling(billingRequest);

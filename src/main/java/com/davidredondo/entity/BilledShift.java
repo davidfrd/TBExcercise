@@ -7,22 +7,22 @@ import com.davidredondo.util.DecimalWithTwoDigitPrecision;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 public class BilledShift implements Serializable {
-	
+
 	private static final long serialVersionUID = -9036942206048040725L;
 
 	private Integer id;
-	
+
 	private String start;
-	
+
 	private String end;
-	
+
 	private Integer session;
-	
+
 	@JsonSerialize(using = DecimalWithTwoDigitPrecision.class)
 	private Double pay;
-	
+
 	private List<BillingPortion> portions;
-	
+
 	public static BilledShift from(BillingShift billingShift, List<BillingPortion> billingPortionList) {
 		BilledShift billedShift = new BilledShift();
 		billedShift.setId(billingShift.getId());
@@ -45,7 +45,6 @@ public class BilledShift implements Serializable {
 	public String getStart() {
 		return start;
 	}
-
 
 	public void setStart(String start) {
 		this.start = start;
@@ -82,11 +81,12 @@ public class BilledShift implements Serializable {
 	public void setPortions(List<BillingPortion> portions) {
 		this.portions = portions;
 	}
-	
+
 	public boolean equals(Object obj) {
 		if (obj instanceof BilledShift) {
 			BilledShift billedShift = BilledShift.class.cast(obj);
-			return billedShift.id.equals(this.id) && billedShift.start.equals(this.start) && billedShift.end.equals(this.end )&& billedShift.session.equals(this.session);
+			return billedShift.id.equals(this.id) && billedShift.start.equals(this.start)
+					&& billedShift.end.equals(this.end) && billedShift.session.equals(this.session);
 		}
 		return false;
 	}

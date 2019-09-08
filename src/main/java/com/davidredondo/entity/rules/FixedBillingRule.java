@@ -5,30 +5,29 @@ import javax.validation.constraints.NotNull;
 
 import org.joda.time.Seconds;
 
-import com.davidredondo.entity.BilledShift;
 import com.davidredondo.entity.BillingPortion;
 import com.davidredondo.entity.BillingShift;
 import com.davidredondo.util.DateUtils;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class FixedBillingRule extends BillingRule {
-	
+
 	private static final long serialVersionUID = 4094509868737612763L;
 
 	@NotNull
 	@NotEmpty
 	private String start;
-	
+
 	@NotNull
 	@NotEmpty
 	private String end;
-	
+
 	@JsonIgnore
 	private Seconds startSeconds;
-	
+
 	@JsonIgnore
 	private Seconds endSeconds;
-	
+
 	public String getStart() {
 		return start;
 	}
@@ -50,23 +49,24 @@ public class FixedBillingRule extends BillingRule {
 	public BillingPortion calculateBillingPortionFromShift(BillingShift billingShift) {
 		return convertToDurationBillingRule(billingShift).calculateBillingPortionFromShift(billingShift);
 	}
-	
+
 	private DurationBillingRule convertToDurationBillingRule(BillingShift billingShift) {
-		Seconds billingStartSeconds = Seconds.seconds(billingShift.getStartDateTime().getSecondOfDay());
+		Seconds billingStartSecondOfDay = Seconds.seconds(billingShift.getStartDateTime().getSecondOfDay());
 		Seconds secondsBetweenRuleStartAndEnd = getSecondsBetweenStartAndEnd();
-		Seconds start = startSeconds.minus(billingStartSeconds);
-		if (start.isLessThan(Seconds.ZERO)) {
-			secondsBetweenRuleStartAndEnd = secondsBetweenRuleStartAndEnd.plus(start);
-			start = Seconds.ZERO;
+		Seconds secondsWhenRuleStartToBeApplied = startSeconds.minus(billingStartSecondOfDay);
+		if (secondsWhenRuleStartToBeApplied.isLessThan(Seconds.ZERO)) {
+			secondsBetweenRuleStartAndEnd = secondsBetweenRuleStartAndEnd.plus(secondsWhenRuleStartToBeApplied);
+			secondsWhenRuleStartToBeApplied = Seconds.ZERO;
 		}
-		Seconds end = start.plus(secondsBetweenRuleStartAndEnd);
+		Seconds secondsWhenRuleEndToBeApplied = secondsWhenRuleStartToBeApplied.plus(secondsBetweenRuleStartAndEnd);
+
 		DurationBillingRule durationBillingRule = new DurationBillingRule();
 		durationBillingRule.setId(this.getId());
 		durationBillingRule.setPayRate(this.getPayRate());
-		durationBillingRule.setStart(start.getSeconds());
-		durationBillingRule.setEnd(end.getSeconds());
+		durationBillingRule.setStart(secondsWhenRuleStartToBeApplied.getSeconds());
+		durationBillingRule.setEnd(secondsWhenRuleEndToBeApplied.getSeconds());
 		return durationBillingRule;
-		
+
 	}
 
 	private Seconds getSecondsBetweenStartAndEnd() {
@@ -78,12 +78,14 @@ public class FixedBillingRule extends BillingRule {
 	}
 
 	@Override
-	public void validate() {}
-	
+	public void validate() {
+	}
+
 	public boolean equals(Object obj) {
 		if (obj instanceof FixedBillingRule) {
 			FixedBillingRule fixedBillingRule = FixedBillingRule.class.cast(obj);
-			return super.equals(obj) && fixedBillingRule.start.equals(this.start) && fixedBillingRule.end.equals(this.end);
+			return super.equals(obj) && fixedBillingRule.start.equals(this.start)
+					&& fixedBillingRule.end.equals(this.end);
 		}
 		return false;
 	}

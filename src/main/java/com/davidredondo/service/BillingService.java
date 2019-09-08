@@ -28,8 +28,7 @@ public class BillingService implements IBillingService {
 	}
 
 	private List<BilledShift> calculateAllBilledShift(BillingRequest billingRequest) {
-		return billingRequest.getShifts().stream()
-				.map(shift -> calculateBilledShift(shift, billingRequest.getRules()))
+		return billingRequest.getShifts().stream().map(shift -> calculateBilledShift(shift, billingRequest.getRules()))
 				.collect(Collectors.toList());
 	}
 
@@ -40,10 +39,8 @@ public class BillingService implements IBillingService {
 
 	private List<BillingPortion> calculateBillingPortionsShiftWithRules(BillingShift billingShift,
 			List<BillingRule> billingRuleList) {
-		return billingRuleList.stream()
-				.map(rule -> rule.calculateBillingPortionFromShift(billingShift))
-				.filter(billingPortion -> billingPortion.getSession() > 0)
-				.collect(Collectors.toList());
+		return billingRuleList.stream().map(rule -> rule.calculateBillingPortionFromShift(billingShift))
+				.filter(billingPortion -> billingPortion.getSession() > 0).collect(Collectors.toList());
 	}
 
 }

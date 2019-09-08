@@ -59,7 +59,8 @@ public class BillingPortion {
 	public boolean equals(Object obj) {
 		if (obj instanceof BillingPortion) {
 			BillingPortion billingPortion = BillingPortion.class.cast(obj);
-			return billingPortion.id.equals(this.id) && billingPortion.start.equals(this.start) && billingPortion.end.equals(this.end) && billingPortion.session.equals(this.session);
+			return billingPortion.id.equals(this.id) && billingPortion.start.equals(this.start)
+					&& billingPortion.end.equals(this.end) && billingPortion.session.equals(this.session);
 		}
 		return false;
 	}

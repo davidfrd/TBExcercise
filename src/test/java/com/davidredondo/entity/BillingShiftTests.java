@@ -13,19 +13,13 @@ public class BillingShiftTests {
 	
 	@Test(expected = ValidationException.class)
 	public void testBillingShiftStartsAfterEndsValidation() {
-		BillingShift billingShift = new BillingShift();
-		billingShift.setId(1);
-		billingShift.setStart("2019-04-28 20:30:00");
-		billingShift.setEnd("2019-04-27 20:30:00");
+		BillingShift billingShift = EntityMaker.createBillingShift(1, "2019-04-28 20:30:00", "2019-04-27 20:30:00");
 		billingShift.validate();
 	}
 	
 	@Test(expected = ValidationException.class)
 	public void testBillingShiftDurationValidation() {
-		BillingShift billingShift = new BillingShift();
-		billingShift.setId(1);
-		billingShift.setStart("2019-04-28 20:30:00");
-		billingShift.setEnd("2020-04-28 20:30:00");
+		BillingShift billingShift = EntityMaker.createBillingShift(1, "2019-04-28 20:30:00", "2020-04-28 20:30:00");
 		billingShift.validate();
 	}
 

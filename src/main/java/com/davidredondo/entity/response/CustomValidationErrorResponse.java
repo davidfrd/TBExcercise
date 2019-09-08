@@ -1,17 +1,19 @@
 package com.davidredondo.entity.response;
 
 public class CustomValidationErrorResponse {
-	
+
 	private String errorMessage;
-	
+
 	private Object invalidObject;
-	
+
 	private String className;
-	
-	private CustomValidationErrorResponse() {};
-	
+
+	private CustomValidationErrorResponse() {
+	};
+
 	public static CustomValidationErrorResponse build(Object invalidObject, String errorMessage) {
-		return new CustomValidationErrorResponse().setErrorMessage(errorMessage).setInvalidObject(invalidObject).setClassName(invalidObject.getClass().getSimpleName());
+		return new CustomValidationErrorResponse().setErrorMessage(errorMessage).setInvalidObject(invalidObject)
+				.setClassName(invalidObject.getClass().getSimpleName());
 	}
 
 	public String getErrorMessage() {

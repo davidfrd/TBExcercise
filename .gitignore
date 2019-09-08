@@ -29,3 +29,8 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### MAVEN ###
+.mvn/
+mvnw*
+.attach_pid19470

@@ -1,17 +1,18 @@
-package com.davidredondo.dto.response;
+package com.davidredondo.entity.response;
 
 import java.io.Serializable;
 import java.util.List;
 
-import com.davidredondo.dto.BilledShift;
-import com.davidredondo.util.DoubleDecimalSerializerWithTwoDigitPrecisionAndDotSeparator;
+import com.davidredondo.entity.BilledShift;
+import com.davidredondo.entity.rules.BillingRule;
+import com.davidredondo.util.DecimalWithTwoDigitPrecision;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 public class BillingResponse implements Serializable {
 	
 	private static final long serialVersionUID = 5997136200516270281L;
 
-	@JsonSerialize(using = DoubleDecimalSerializerWithTwoDigitPrecisionAndDotSeparator.class)
+	@JsonSerialize(using = DecimalWithTwoDigitPrecision.class)
 	private Double pay;
 	
 	private List<BilledShift> billedShifts;
@@ -37,6 +38,14 @@ public class BillingResponse implements Serializable {
 
 	public void setBilledShifts(List<BilledShift> billedShifts) {
 		this.billedShifts = billedShifts;
+	}
+	
+	public boolean equals(Object obj) {
+		if (obj instanceof BillingResponse) {
+			BillingResponse billingResponse = BillingResponse.class.cast(obj);
+			return billingResponse.pay.equals(this.pay) && billingResponse.billedShifts.equals(this.billedShifts);
+		}
+		return false;
 	}
 
 }

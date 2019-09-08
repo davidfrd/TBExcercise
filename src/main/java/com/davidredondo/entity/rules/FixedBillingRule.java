@@ -1,12 +1,13 @@
-package com.davidredondo.dto.rules;
+package com.davidredondo.entity.rules;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 import org.joda.time.Seconds;
 
-import com.davidredondo.dto.BillingPortion;
-import com.davidredondo.dto.BillingShift;
+import com.davidredondo.entity.BilledShift;
+import com.davidredondo.entity.BillingPortion;
+import com.davidredondo.entity.BillingShift;
 import com.davidredondo.util.DateUtils;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -47,41 +48,25 @@ public class FixedBillingRule extends BillingRule {
 	}
 
 	public BillingPortion calculateBillingPortionFromShift(BillingShift billingShift) {
+		return convertToDurationBillingRule(billingShift).calculateBillingPortionFromShift(billingShift);
+	}
+	
+	private DurationBillingRule convertToDurationBillingRule(BillingShift billingShift) {
 		Seconds billingStartSeconds = Seconds.seconds(billingShift.getStartDateTime().getSecondOfDay());
-		
 		Seconds secondsBetweenRuleStartAndEnd = getSecondsBetweenStartAndEnd();
-		
-		
-		// Se convierte en un duration
-		//Seconds start = Seconds.ZERO;
 		Seconds start = startSeconds.minus(billingStartSeconds);
 		if (start.isLessThan(Seconds.ZERO)) {
 			secondsBetweenRuleStartAndEnd = secondsBetweenRuleStartAndEnd.plus(start);
 			start = Seconds.ZERO;
 		}
 		Seconds end = start.plus(secondsBetweenRuleStartAndEnd);
-		/* BORRAR */
-		BillingPortion billingPortion = new BillingPortion(); 
-		Integer sessionDuration = calculatePortionSessionDuration(billingShift.getSessionTime().getSeconds(), start.getSeconds(), end.getSeconds());
-		billingPortion.setSession(sessionDuration);
-		billingPortion.setPay(Double.valueOf(DateUtils.secondsToHours(sessionDuration)) * this.getPayRate());
-		billingPortion.setId(this.getId());
-		billingPortion.setStart(DateUtils.getJsonDateFormatFromDateTime(billingShift.getStartDateTime().plus(start)));
-		billingPortion.setEnd(DateUtils.getJsonDateFormatFromDateTime(billingShift.getStartDateTime().plus(start).plus(Seconds.seconds(sessionDuration))));
-		return billingPortion;
+		DurationBillingRule durationBillingRule = new DurationBillingRule();
+		durationBillingRule.setId(this.getId());
+		durationBillingRule.setPayRate(this.getPayRate());
+		durationBillingRule.setStart(start.getSeconds());
+		durationBillingRule.setEnd(end.getSeconds());
+		return durationBillingRule;
 		
-	}
-
-	/* DELETE */
-	private Integer calculatePortionSessionDuration(Integer shiftDuration, Integer start, Integer end) {
-		if (start > shiftDuration) {
-			return 0;
-		} else if( end > shiftDuration ) {
-			return shiftDuration - start;
-		} else if (end < shiftDuration ) {
-			return end - start;
-		} 
-		return 0;
 	}
 
 	private Seconds getSecondsBetweenStartAndEnd() {
@@ -93,9 +78,14 @@ public class FixedBillingRule extends BillingRule {
 	}
 
 	@Override
-	public boolean validate() {
-		// TODO Auto-generated method stub
-		return true;
+	public void validate() {}
+	
+	public boolean equals(Object obj) {
+		if (obj instanceof FixedBillingRule) {
+			FixedBillingRule fixedBillingRule = FixedBillingRule.class.cast(obj);
+			return super.equals(obj) && fixedBillingRule.start.equals(this.start) && fixedBillingRule.end.equals(this.end);
+		}
+		return false;
 	}
 
 }

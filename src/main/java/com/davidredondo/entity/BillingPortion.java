@@ -1,6 +1,6 @@
-package com.davidredondo.dto;
+package com.davidredondo.entity;
 
-import com.davidredondo.util.DoubleDecimalSerializerWithTwoDigitPrecisionAndDotSeparator;
+import com.davidredondo.util.DecimalWithTwoDigitPrecision;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 public class BillingPortion {
@@ -13,7 +13,7 @@ public class BillingPortion {
 
 	private Integer session;
 
-	@JsonSerialize(using = DoubleDecimalSerializerWithTwoDigitPrecisionAndDotSeparator.class)
+	@JsonSerialize(using = DecimalWithTwoDigitPrecision.class)
 	private Double pay;
 
 	public Integer getId() {
@@ -56,5 +56,12 @@ public class BillingPortion {
 		this.pay = pay;
 	}
 
+	public boolean equals(Object obj) {
+		if (obj instanceof BillingPortion) {
+			BillingPortion billingPortion = BillingPortion.class.cast(obj);
+			return billingPortion.id.equals(this.id) && billingPortion.start.equals(this.start) && billingPortion.end.equals(this.end) && billingPortion.session.equals(this.session);
+		}
+		return false;
+	}
 
 }

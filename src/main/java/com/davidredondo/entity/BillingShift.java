@@ -1,4 +1,4 @@
-package com.davidredondo.dto;
+package com.davidredondo.entity;
 
 import java.io.Serializable;
 
@@ -9,6 +9,7 @@ import javax.validation.constraints.Positive;
 import org.joda.time.DateTime;
 import org.joda.time.Seconds;
 
+import com.davidredondo.exception.ValidationException;
 import com.davidredondo.util.DateUtils;
 import com.davidredondo.util.interfaces.Validable;
 
@@ -71,16 +72,28 @@ public class BillingShift implements Validable, Serializable {
 	}
 
 	@Override
-	public boolean validate() {
-		return sessionTimeLessThan(MAX_SESSION_IN_SECONDS) && sessionStartsBeforeEnds();
+	public void validate() {
+		sessionTimeLessThan(MAX_SESSION_IN_SECONDS); 
+		sessionStartsBeforeEnds();
 	}
 	
-	private boolean sessionStartsBeforeEnds() {
-		return getStartDateTime().isBefore(getEndDateTime());
+	private void sessionStartsBeforeEnds() {
+		if (getStartDateTime().isAfter(getEndDateTime())) {
+			ValidationException.throwWithInvalidObjectAndMessage(this, "Session ends before starts");
+		}
 	}
 	
-	private boolean sessionTimeLessThan(Integer seconds) {
-		return getSessionTime().isLessThan(Seconds.seconds(seconds));
+	private void sessionTimeLessThan(Integer seconds) {
+		if (getSessionTime().isGreaterThan(Seconds.seconds(seconds))) {
+			ValidationException.throwWithInvalidObjectAndMessage(this, "Session time is higher than " + seconds);
+		};
 	}
 
+	public boolean equals(Object obj) {
+		if (obj instanceof BillingShift) {
+			BillingShift billingShift = BillingShift.class.cast(obj);
+			return billingShift.id.equals(this.id) && billingShift.start.equals(this.start) && billingShift.end.equals(this.end);
+		}
+		return false;
+	}
 }

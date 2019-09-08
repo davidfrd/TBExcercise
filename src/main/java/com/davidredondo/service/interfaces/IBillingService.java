@@ -1,7 +1,7 @@
 package com.davidredondo.service.interfaces;
 
-import com.davidredondo.dto.request.BillingRequest;
-import com.davidredondo.dto.response.BillingResponse;
+import com.davidredondo.entity.request.BillingRequest;
+import com.davidredondo.entity.response.BillingResponse;
 
 public interface IBillingService {
 

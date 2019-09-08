@@ -1,4 +1,4 @@
-package com.davidredondo.dto.rules;
+package com.davidredondo.entity.rules;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
@@ -6,8 +6,9 @@ import javax.validation.constraints.PositiveOrZero;
 
 import org.joda.time.Seconds;
 
-import com.davidredondo.dto.BillingPortion;
-import com.davidredondo.dto.BillingShift;
+import com.davidredondo.entity.BillingPortion;
+import com.davidredondo.entity.BillingShift;
+import com.davidredondo.exception.ValidationException;
 import com.davidredondo.util.DateUtils;
 
 public class DurationBillingRule extends BillingRule {
@@ -62,12 +63,22 @@ public class DurationBillingRule extends BillingRule {
 
 
 	@Override
-	public boolean validate() {
-		return ruleStartsBeforeEnds();
+	public void validate() {
+		ruleStartsBeforeEnds();
 	}
 	
-	private boolean ruleStartsBeforeEnds() {
-		return start < end;
+	private void ruleStartsBeforeEnds() {
+		if (start > end) {
+			ValidationException.throwWithInvalidObjectAndMessage(this, "End must be higher than start");
+		}
+	}
+	
+	public boolean equals(Object obj) {
+		if (obj instanceof DurationBillingRule) {
+			DurationBillingRule durationBillingRule = DurationBillingRule.class.cast(obj);
+			return super.equals(obj) && durationBillingRule.start.equals(this.start) && durationBillingRule.end.equals(this.end);
+		}
+		return false;
 	}
 
 }

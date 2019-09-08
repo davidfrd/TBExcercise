@@ -1,9 +1,9 @@
-package com.davidredondo.dto;
+package com.davidredondo.entity;
 
 import java.io.Serializable;
 import java.util.List;
 
-import com.davidredondo.util.DoubleDecimalSerializerWithTwoDigitPrecisionAndDotSeparator;
+import com.davidredondo.util.DecimalWithTwoDigitPrecision;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 public class BilledShift implements Serializable {
@@ -18,7 +18,7 @@ public class BilledShift implements Serializable {
 	
 	private Integer session;
 	
-	@JsonSerialize(using = DoubleDecimalSerializerWithTwoDigitPrecisionAndDotSeparator.class)
+	@JsonSerialize(using = DecimalWithTwoDigitPrecision.class)
 	private Double pay;
 	
 	private List<BillingPortion> portions;
@@ -81,6 +81,14 @@ public class BilledShift implements Serializable {
 
 	public void setPortions(List<BillingPortion> portions) {
 		this.portions = portions;
+	}
+	
+	public boolean equals(Object obj) {
+		if (obj instanceof BilledShift) {
+			BilledShift billedShift = BilledShift.class.cast(obj);
+			return billedShift.id.equals(this.id) && billedShift.start.equals(this.start) && billedShift.end.equals(this.end )&& billedShift.session.equals(this.session);
+		}
+		return false;
 	}
 
 }

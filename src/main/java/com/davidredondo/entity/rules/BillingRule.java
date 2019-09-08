@@ -1,4 +1,4 @@
-package com.davidredondo.dto.rules;
+package com.davidredondo.entity.rules;
 
 import java.io.Serializable;
 
@@ -6,9 +6,9 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 
-import com.davidredondo.dto.BillingPortion;
-import com.davidredondo.dto.BillingShift;
-import com.davidredondo.util.DoubleDecimalSerializerWithTwoDigitPrecisionAndDotSeparator;
+import com.davidredondo.entity.BillingPortion;
+import com.davidredondo.entity.BillingShift;
+import com.davidredondo.util.DecimalWithTwoDigitPrecision;
 import com.davidredondo.util.interfaces.Validable;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
@@ -25,18 +25,17 @@ public abstract class BillingRule implements Validable, Serializable {
 
 	@NotNull
 	@Positive
-	private Integer id;
+	protected Integer id;
 	
 	@NotNull
 	@NotEmpty
-	private String type;
+	protected String type;
 	
 	@NotNull
 	@Positive
-	@JsonSerialize(using = DoubleDecimalSerializerWithTwoDigitPrecisionAndDotSeparator.class)
-	private Double payRate;
+	@JsonSerialize(using = DecimalWithTwoDigitPrecision.class)
+	protected Double payRate;
 
-	
 	public Integer getId() {
 		return id;
 	}
@@ -63,4 +62,11 @@ public abstract class BillingRule implements Validable, Serializable {
 	
 	public abstract BillingPortion calculateBillingPortionFromShift(BillingShift billingShift);
 
+	public boolean equals(Object obj) {
+		if (obj instanceof BillingRule) {
+			BillingRule billingRule = BillingRule.class.cast(obj);
+			return super.equals(obj) && billingRule.id.equals(this.id) && billingRule.type.equals(this.type);
+		}
+		return false;
+	}
 }

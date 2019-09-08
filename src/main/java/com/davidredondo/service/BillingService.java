@@ -5,12 +5,12 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
-import com.davidredondo.dto.BilledShift;
-import com.davidredondo.dto.BillingPortion;
-import com.davidredondo.dto.BillingShift;
-import com.davidredondo.dto.request.BillingRequest;
-import com.davidredondo.dto.response.BillingResponse;
-import com.davidredondo.dto.rules.BillingRule;
+import com.davidredondo.entity.BilledShift;
+import com.davidredondo.entity.BillingPortion;
+import com.davidredondo.entity.BillingShift;
+import com.davidredondo.entity.request.BillingRequest;
+import com.davidredondo.entity.response.BillingResponse;
+import com.davidredondo.entity.rules.BillingRule;
 import com.davidredondo.service.interfaces.IBillingService;
 
 @Service

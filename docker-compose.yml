@@ -1,0 +1,7 @@
+version: '3'
+services:
+  service:
+    build: .
+    ports:
+      - 8085:8080
+      

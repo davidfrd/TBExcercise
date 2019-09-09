@@ -23,7 +23,7 @@ docker-compose up
 
 ## Consuming service
 After a few minutes, when the application is up, you must be able to consume the services 
-in the port `8085`.
+in the port `8085` and you will be able to consume get billing endpoint.
 
 ex.
 ```

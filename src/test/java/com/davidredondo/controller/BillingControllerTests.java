@@ -1,6 +1,6 @@
 package com.davidredondo.controller;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -128,7 +128,7 @@ public class BillingControllerTests {
 	
 	@Test
 	public void testOkRequestBody() throws Exception{
-		this.mockMvc.perform(post("/billing").contentType(MediaType.APPLICATION_JSON).content(REQUEST_JSON_1)).andExpect(status().isOk()).andExpect(content().json(EXPECTER_JSON_1));
+		this.mockMvc.perform(get("/billing").contentType(MediaType.APPLICATION_JSON).content(REQUEST_JSON_1)).andExpect(status().isOk()).andExpect(content().json(EXPECTER_JSON_1));
 	}
 	
 }
